@@ -30,14 +30,8 @@ include(cmake/ProjectModule.cmake)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_definitions(-DWIN32)
-add_definitions(-D_WIN32)
-
-add_definitions(-D_UNICODE)
-add_definitions(-DUNICODE)
-
 add_subdirectory(third_party)
 
 set(APP_NAME ${PROJECT_NAME})
 
-add_project(EXECUTABLE TARGET ${APP_NAME} DIRECTORY src LINK spdlog sfml-system sfml-window sfml-graphics sfml-audio LOG)
+add_project(EXECUTABLE TARGET ${APP_NAME} DIRECTORY src INCLUDE third_party/SFML/include LINK spdlog sfml-system sfml-window sfml-graphics sfml-audio LOG)

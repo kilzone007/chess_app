@@ -25,12 +25,15 @@ function(add_project)
     endif()
 
     if(NOT ${${prefix}_DIRECTORY} STREQUAL "")
-        file(GLOB ${${prefix}_TARGET}_SOURCES
+        file(GLOB_RECURSE ${${prefix}_TARGET}_SOURCES
             ${${prefix}_DIRECTORY}/*.h
             ${${prefix}_DIRECTORY}/*.c
             ${${prefix}_DIRECTORY}/*.hpp
             ${${prefix}_DIRECTORY}/*.cpp
         )
+        if (${${prefix}_LOG})
+            message("${${prefix}_TARGET}_SOURCES = ${${${prefix}_TARGET}_SOURCES}")
+        endif()
     endif()
 
     if (${${prefix}_EXECUTABLE})
@@ -53,6 +56,8 @@ function(add_project)
 
         add_library(${${prefix}_TARGET} ${_lib_type} ${${${prefix}_TARGET}_SOURCES} ${${prefix}_SOURCES})
     endif()
+
+    target_include_directories(${${prefix}_TARGET} PUBLIC ${${prefix}_DIRECTORY})
 
     foreach(includer ${${prefix}_INCLUDE})
         target_include_directories(${${prefix}_TARGET} PUBLIC ${includer})
