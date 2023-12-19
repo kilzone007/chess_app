@@ -1,0 +1,43 @@
+cmake_minimum_required(VERSION 3.16)
+project(chess_app)
+
+set(CMAKE_BUILD_TYPE Release)
+
+set(CMAKE_CONFIGURATION_TYPES "${CMAKE_BUILD_TYPE}")
+string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
+
+math(EXPR ARCH "8*${CMAKE_SIZEOF_VOID_P}")
+math(EXPR SUBSYSTEM "${CMAKE_SIZEOF_VOID_P}/4")
+
+set(LIBDIR ${CMAKE_BINARY_DIR}/../lib/${ARCH})
+set(EXEDIR ${CMAKE_BINARY_DIR}/../bin/${ARCH})
+if(NOT ${CMAKE_GENERATOR} MATCHES "^Visual Studio")
+    set(EXEDIR ${EXEDIR}/${CMAKE_BUILD_TYPE})
+    set(LIBDIR ${LIBDIR}/${CMAKE_BUILD_TYPE})
+endif()
+
+link_directories("${LIBDIR}")
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${LIBDIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIBDIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EXEDIR})
+set(CMAKE_PDB_OUTPUT_DIRECTORY ${EXEDIR})
+
+set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
+
+include(cmake/ProjectModule.cmake)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_definitions(-DWIN32)
+add_definitions(-D_WIN32)
+
+add_definitions(-D_UNICODE)
+add_definitions(-DUNICODE)
+
+add_subdirectory(third_party)
+
+set(APP_NAME ${PROJECT_NAME})
+
+add_project(EXECUTABLE TARGET ${APP_NAME} DIRECTORY src LINK spdlog sfml-system sfml-window sfml-graphics sfml-audio LOG)
